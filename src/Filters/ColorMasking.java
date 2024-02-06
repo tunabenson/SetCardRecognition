@@ -6,6 +6,14 @@ import core.DImage;
 public class ColorMasking implements PixelFilter {
     private double threshold =100;
     private short targetR=255, targetG=255, targetB=255;
+
+    public ColorMasking(double threshold, short targetR, short targetG, short targetB) {
+        this.threshold = threshold;
+        this.targetR = targetR;
+        this.targetG = targetG;
+        this.targetB = targetB;
+    }
+
     @Override
     public DImage processImage(DImage img) {
         short[][] red = img.getRedChannel();
