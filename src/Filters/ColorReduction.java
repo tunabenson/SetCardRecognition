@@ -14,6 +14,7 @@ public class ColorReduction implements PixelFilter {
     public ColorReduction(int k){
         this.k = k;
     }
+    public ColorReduction(){k = 5;}
     @Override
     public DImage processImage(DImage img) {
         short[][] red = img.getRedChannel();
