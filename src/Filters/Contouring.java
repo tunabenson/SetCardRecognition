@@ -2,6 +2,7 @@ package Filters;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import Interfaces.PixelFilter;
 import core.DImage;
@@ -15,33 +16,55 @@ public class Contouring implements PixelFilter{
 
 	@Override
 	public DImage processImage(DImage img) {
-		img= new ColorMasking().processImage(img); //color mask for white
+		DImage newImage= new ColorMasking().processImage(img); //color mask for white
+		ArrayList<Point> list=findAllContourPixels(newImage);
+		short [][] pixels= img.getBWPixelGrid();
+		for (Point pixel: list) {
+			pixels[pixel.x][pixel.y]=255;
+		}
+		img.setPixels(pixels);
 		return img;
 	}
 
-	private void findAllContourPixels(DImage img) {
+	private ArrayList<Point> findAllContourPixels(DImage img) {
 		ArrayList<Point> pixelList= new ArrayList<Point>(); //list of all contour pixel points 
 		short [][] pixels= img.getBWPixelGrid();
-		for (int i = img.getHeight(); i >0; i--) { //iterate bottom->top; left->right
-			for (int j = img.getWidth(); j < 0; j--) {
+		for (int i = pixels.length-1; i >0; i--) { //iterate bottom->top; left->right
+			for (int j = pixels[0].length-1; j >0; j--) {
+				//System.out.println(i);
+				//System.out.println(j);
 				if (pixels[i][j]==255) {
-					findSingleObjectContourPixels(pixels, pixelList, i, j);
+					System.out.println("made it");
+					 return findSingleObjectContourPixels(pixels, pixelList, i, j);
+					 
 				}
 			}
 		}
+		return null;
 	}
 
 
-	private void findSingleObjectContourPixels(short [][] pixels, ArrayList<Point> pixelList, int i, int j) {
+	private ArrayList<Point> findSingleObjectContourPixels(short [][] pixels, ArrayList<Point> pixelList, int i, int j) {
 		Point start= new Point(i, j); //point obj will be used to rep. pixel location
 		pixelList.add(start);
-		Point current=moveTo(Direction.LEFT, start);	
+		Direction currDirection=Direction.LEFT;
+		Point current=moveTo(currDirection, start);	
+		int count=0;
 		do {
+			count++;
 			if(pixels[current.x][current.y]==255) {
-				
+				currDirection= turnTo(0, currDirection);
+				System.out.println(currDirection);
+				current=moveTo(currDirection,current);
+				pixelList.add(current);
 			}
+			else {
+				currDirection= turnTo(1, currDirection);
+				current=moveTo(currDirection,current);
+			}
+			System.out.println(count);
 		} while(!start.equals(current));
-
+		return pixelList;
 	}
 
 	
@@ -82,36 +105,6 @@ public class Contouring implements PixelFilter{
 		return null;
 	}
 
-	private static class ColorMasking implements PixelFilter{
-		private double threshold=200; 
-		private short targetR=255, targetG=255, targetB=255;
-		@Override
-		public DImage processImage(DImage img) {
-			short[][] red = img.getRedChannel();
-			short[][] green = img.getGreenChannel();
-			short[][] blue = img.getBlueChannel();
-
-			for (int i = 0; i < blue.length; i++) {
-				for (int j = 0; j < blue[0].length; j++) {
-					if(distanceToTarget(red[i][j],green[i][j],blue[i][j])<=threshold) {
-						red[i][j]=255;
-						green[i][j]=255;
-						blue[i][j]=255;
-					}
-					else {
-						red[i][j]=0;
-						green[i][j]=0;
-						blue[i][j]=0;
-					}
-				}
-			}
-			img.setColorChannels(red, green, blue);
-			return img;
-		}
-		private double distanceToTarget(short r, short g, short b) {
-			return Math.sqrt(Math.pow(r-targetR, 2)+Math.pow(g-targetG, 2)+Math.pow(b-targetB, 2));
-		}
-
-	}
+	
 
 }
