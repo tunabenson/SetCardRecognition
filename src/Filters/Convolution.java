@@ -72,15 +72,21 @@ public class Convolution implements PixelFilter {
         return original;
     }
 
-//    private short[][] generateGaussian(double sigma, int size){
-//        int k = (size -1)/2;
-//        short[][] kernel = new short[size][size];
-//
-//        for (int i = 1; i <= size; i++) {
-//            for (int j = 1; j <= size; j++) {
-//                double firstPart = 1/(2 * Math.PI * Math.pow(sigma,2));
-//                double secondPart =
-//            }
-//        }
-//    }
+    public static short[][] generateGaussian(double sigma, int size){
+        int k = (size -1)/2;
+        short[][] kernel = new short[size][size];
+
+        for (int i = 1; i <= size; i++) {
+            for (int j = 1; j <= size; j++) {
+                double firstPart = 1/(2 * Math.PI * Math.pow(sigma,2));
+                double secondPart = - ( Math.pow(i-(k+1),2) + Math.pow(j - (k+1),2));
+                double thirdPart = 1/(2 * sigma * sigma);
+                double fourthPart = secondPart*thirdPart;
+                double fifthPart = Math.exp(fourthPart);
+                kernel[i-1][j-1] = (short) (firstPart*fifthPart);
+            }
+        }
+
+        return kernel;
+    }
 }

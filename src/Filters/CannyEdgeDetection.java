@@ -26,7 +26,7 @@ public class CannyEdgeDetection implements PixelFilter {
 
 
 
-        img.setPixels(visualizeEdgeStatus(edgeStatus));
+        img.setPixels(visualizeEdgeStatus(hysteriezed));
         return img;
     }
 
