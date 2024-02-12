@@ -4,7 +4,7 @@ import Interfaces.PixelFilter;
 import core.DImage;
 
 public class ColorMasking implements PixelFilter{
-		private double threshold=100; 
+		private double threshold=200; 
 		private short targetR=255, targetG=255, targetB=255;
 		@Override
 		public DImage processImage(DImage img) {
