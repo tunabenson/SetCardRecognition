@@ -75,19 +75,29 @@ class ColorReduction implements PixelFilter {
 
     public Cluster[] initClusters(int k){
         Cluster[] clusters = new Cluster[k];
-        for (int i = 0; i < clusters.length; i++) {
-            clusters[i] = new Cluster();
+        double offset = 255.0 / (k+1);
+        for (int i = 1; i <= k; i++) {
+            short setPoint = (short) (i * offset);
+            clusters[i-1] = new Cluster(setPoint);
         }
 
         return clusters;
     }
 
     public void calculateColorCenters(Cluster[] clusters, Point[] points){
-        boolean stop = false;
-        while(!stop){
+//        boolean stop = false;
+//        while(!stop){
+//            clearClusters(clusters);
+//            assignPoints(clusters, points);
+//            stop = calculateCenters(clusters);
+//        }
+
+        for(int i = 0; i < 15; i++){
             clearClusters(clusters);
             assignPoints(clusters, points);
-            stop = calculateCenters(clusters);
+            if(calculateCenters(clusters)){
+                return;
+            }
         }
     }
 

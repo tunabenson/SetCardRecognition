@@ -2,6 +2,7 @@ package core;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Blob {
 	private ArrayList<Point> blob;
@@ -81,10 +82,11 @@ public class Blob {
 		return src;
 	}
 
-	private  void highlightCorner(short [][] red, short[][] blue, short[][] green) {
-		for (Point corner : corners) {
-			for (int i = corner.x-5; i < corner.x+5; i++) {
-				for (int j = corner.y-5; j < corner.y+5; j++) {
+	private void highlightCorner(short [][] red, short[][] blue, short[][] green) {
+		List<int[]> edges = ConvexHulls.convexHull(blob);
+		for (int [] point: edges) {
+			for (int i = point[0]-5; i < point[0]+5; i++) {
+				for (int j =point[1]-5; j < point[1]+5; j++) {
 					if(i>0 && i<red.length && j>0 && j<red[0].length) {
 						red[i][j]=cornerR;
 						blue[i][j]=cornerB;
