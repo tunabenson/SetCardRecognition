@@ -2,6 +2,7 @@ package Filters;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 
 import Filters.kmeans.Cluster;
@@ -18,35 +19,37 @@ public class Contouring implements PixelFilter{
 
 	@Override
 	public DImage processImage(DImage img) {
+		for(short[] line : Convolution.generateGaussian(1,5)){
+			System.out.println(Arrays.toString(line));
+		}
 		img = new Convolution(Convolution.generateGaussian(1.4,5)).processImage(img);
+		img = new ColorReduction(5).processImage(img);
+		Cluster[] clusters = new ColorReduction(5).getClusters(img);
+		Filters.kmeans.Point val = findClosestToWhite(clusters);
+		img = new ColorMasking(30, val.getR(), val.getG(), val.getB()).processImage(img);
+		ArrayList<Point> debug = new ArrayList<>();
+		ArrayList<Point> list=findAllContourPixels(img,debug);
+		short [][] pixels= img.getBWPixelGrid();
+		short[][] red = new short[pixels.length][pixels[0].length];
+		short[][] green = new short[pixels.length][pixels[0].length];
+		short[][] blue = new short[pixels.length][pixels[0].length];
+        assert list != null;
+        //System.out.println(list.size());
+		for (Point pixel: list) {
+			red[pixel.x][pixel.y]=255;
+		}
+		for (Point pixel: debug) {
+			try{
+				green[pixel.x][pixel.y]=255;
+			}catch (Exception e){
+
+			}
+
+		}
+		img.setGreenChannel(green);
+		img.setBlueChannel(blue);
+		img.setRedChannel(red);
 		return img;
-//		img = new ColorReduction(5).processImage(img);
-//		Cluster[] clusters = new ColorReduction(5).getClusters(img);
-//		Filters.kmeans.Point val = findClosestToWhite(clusters);
-//		img = new ColorMasking(30, val.getR(), val.getG(), val.getB()).processImage(img);
-//		ArrayList<Point> debug = new ArrayList<>();
-//		ArrayList<Point> list=findAllContourPixels(img,debug);
-//		short [][] pixels= img.getBWPixelGrid();
-//		short[][] red = new short[pixels.length][pixels[0].length];
-//		short[][] green = new short[pixels.length][pixels[0].length];
-//		short[][] blue = new short[pixels.length][pixels[0].length];
-//        assert list != null;
-//        //System.out.println(list.size());
-//		for (Point pixel: list) {
-//			red[pixel.x][pixel.y]=255;
-//		}
-//		for (Point pixel: debug) {
-//			try{
-//				green[pixel.x][pixel.y]=255;
-//			}catch (Exception e){
-//
-//			}
-//
-//		}
-//		img.setGreenChannel(green);
-//		img.setBlueChannel(blue);
-//		img.setRedChannel(red);
-//		return img;
 	}
 	private Filters.kmeans.Point findClosestToWhite(Cluster[] clusters) {
 		Filters.kmeans.Point colorWhite = new Filters.kmeans.Point((short)255,(short)255,(short)255);

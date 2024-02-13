@@ -79,10 +79,11 @@ public class Convolution implements PixelFilter {
         for (int i = 1; i <= size; i++) {
             for (int j = 1; j <= size; j++) {
                 double firstPart = 1/(2 * Math.PI * Math.pow(sigma,2));
-                double secondPart = - ( Math.pow(i-(k+1),2) + Math.pow(j - (k+1),2));
-                double thirdPart = 1/(2 * sigma * sigma);
-                double fourthPart = secondPart*thirdPart;
+                double secondPart = (j*j + i*i);
+                double thirdPart = (2 * sigma * sigma);
+                double fourthPart = secondPart/thirdPart;
                 double fifthPart = Math.exp(fourthPart);
+                System.out.println(firstPart*fifthPart);
                 kernel[i-1][j-1] = (short) (firstPart*fifthPart);
             }
         }
