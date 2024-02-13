@@ -10,6 +10,14 @@ public class Cluster {
     public Cluster(){
         center = new Point((short)(Math.random() * 256), (short)(Math.random() * 256), (short)(Math.random() * 256));
     }
+
+    public Cluster(short r, short g, short b){
+        center = new Point(r, g, b);
+    }
+
+    public Cluster(short setPoint){
+        center = new Point(setPoint, setPoint, setPoint);
+    }
     public void addPoint(Point p){
         points.add(p);
     }
