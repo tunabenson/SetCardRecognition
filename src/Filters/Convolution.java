@@ -3,7 +3,7 @@ package Filters;
 import Interfaces.PixelFilter;
 import core.DImage;
 
-public class Convolution implements PixelFilter {
+class Convolution implements PixelFilter {
 
     short[][] kernel;
 
