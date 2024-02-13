@@ -62,7 +62,7 @@ public class Floodfill implements PixelFilter {
 				populateWithSurroundingPixels(pixels, current, queue, (short)255, floodFillCol,b);
 			}
 			if (b.size()>500) {
-			b.findCorners();
+			b.findEdges();
 			blobList.add(b);
 			}
 			starting=getStartingPixel(pixels);

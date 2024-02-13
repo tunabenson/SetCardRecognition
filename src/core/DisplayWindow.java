@@ -339,7 +339,8 @@ public class DisplayWindow extends PApplet {
         }
     }
 
-    private PixelFilter loadNewFilter(String name) {
+    @SuppressWarnings("deprecation")
+	private PixelFilter loadNewFilter(String name) {
         PixelFilter f = null;
         try {
             Class c = Class.forName("Filters." + name.toString());
@@ -354,6 +355,7 @@ public class DisplayWindow extends PApplet {
     }
 
     private PixelFilter selectNewFilterDialog() {
+   
         String userDirLocation = System.getProperty("user.dir");
         File userDir = new File(userDirLocation + "/src/Filters");
 
@@ -362,7 +364,7 @@ public class DisplayWindow extends PApplet {
             filters[i] = Objects.requireNonNull(userDir.list())[i].replace(".java", "");
         }
         Object name = JOptionPane.showInputDialog(null, "Select your filter", "Filter Selection", JOptionPane.QUESTION_MESSAGE, null, filters, DEFAULT_FILTER);
-
+        if(name==null)return loadNewFilter("NoFilter");
         return loadNewFilter(name.toString());
     }
 

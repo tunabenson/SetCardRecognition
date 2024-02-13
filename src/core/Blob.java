@@ -6,6 +6,7 @@ import java.util.List;
 
 public class Blob {
 	private ArrayList<Point> blob;
+	private ArrayList<Point> edges;
 	private Point [] corners;
 	private short cornerR;
 	private short cornerG;
@@ -38,19 +39,7 @@ public class Blob {
 	}
 
 	public void findCorners() {
-		Point p1=blob.get(0);// top right corner
-		Point p2=blob.get(1);// top left corner
-		Point p3=blob.get(2);// bottom right corner
-		Point p4=blob.get(3);// bottom left corner
 		
-		for (int i = 0; i < blob.size(); i++) {
-			Point temp=blob.get(i);
-			if(p1.y<temp.y && p1.x>temp.x) p1=temp;
-			if(p2.y>temp.y && p2.x>temp.x) p2=temp;
-			if(p3.y<temp.y && p3.x<temp.x) p3=temp;
-			if(p4.y>temp.y && p4.x<temp.x) p4=temp;
-		}
-		corners= new Point[]{p1,p2,p3,p4};
 	}
 
 
@@ -81,12 +70,46 @@ public class Blob {
 		src.setColorChannels(newRed, newGreen, newBlue);
 		return src;
 	}
-
+	
+	public void findEdges() {
+		
+		
+	}
+	
+	
 	private void highlightCorner(short [][] red, short[][] blue, short[][] green) {
-		List<int[]> edges = ConvexHulls.convexHull(blob);
-		for (int [] point: edges) {
-			for (int i = point[0]-5; i < point[0]+5; i++) {
-				for (int j =point[1]-5; j < point[1]+5; j++) {
+	Point [] edges = ConvexHulls.convexHull(blob); //finds prominent points
+	
+	
+	
+	
+//	ArrayList<Point> allPoints= new ArrayList<>();
+//	for (int i = 1; i < edges.length-1; i++) {
+//		Point p1= edges[i-1];
+//		Point p2= edges[i];
+//		Point p3= edges[i+1];
+//		double slope;
+//		if((slope=isCollinear(p1,p2,p3))!=Double.NaN) {
+//			if(slope==Double.NEGATIVE_INFINITY) {
+//				for (int j = p1.y; j < p3.y; j+=3) {
+//					allPoints.add(new Point(p1.x, j));
+//				}
+//			}
+//			
+//			else {
+//				double b= p1.y-(slope*p1.x);
+//				for (int j = p1.x; j <= p3.x; j+=3) {
+//					allPoints.add(new Point(j, (int)((slope*j)+b)));
+//				}
+//			}
+//		}
+//		allPoints.add(p1);
+//	}
+
+
+		for (Point p: edges) {
+			for (int i =p.x-3; i < p.x+3; i++) {
+				for (int j =p.y-3; j < p.y+3; j++) {
 					if(i>0 && i<red.length && j>0 && j<red[0].length) {
 						red[i][j]=cornerR;
 						blue[i][j]=cornerB;
@@ -95,5 +118,29 @@ public class Blob {
 				}
 			}
 		}
+
+		/*Point p=blob.get(0);
+		for (int i = p.x-5; i < p.x+5; i++) {
+			for (int j =p.y-5; j < p.y+5; j++) {
+				red[i][j]=cornerR;
+				blue[i][j]=cornerG;
+				green[i][j]=cornerB;
+			}
+		}*/
 	}
+	private double isCollinear(Point p1, Point p2, Point p3) {
+		if(p1.x-p2.x==0 && p2.x-p3.x==0) { // edge case to deal with 
+			return Double.NEGATIVE_INFINITY; // flag vertical line
+		}
+		
+		else if((double)(p1.y-p2.y)/(p1.x/p2.x)==(double)(p2.y-p3.y)/(p2.x/p3.x)) {
+			return (double)(p1.y-p2.y)/(p1.x/p2.x);
+		}
+		
+		return Double.NaN; //flag for non found
+	}
+	
+	
+	
 }
+
