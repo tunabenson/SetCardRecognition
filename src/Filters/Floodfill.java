@@ -102,6 +102,8 @@ public class Floodfill implements PixelFilter {
 		}
 	}
 
+	//private boolean isPixelEdgePixel(short [][] pixels, Points pixel, ) {
+	
 	private boolean isPixelValidForFloodFill(short[][] pixels, Point pixel, short oldColor, short newColor){
 		int x = pixel.x;
 		int y = pixel.y;

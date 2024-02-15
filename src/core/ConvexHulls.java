@@ -4,11 +4,7 @@ import java.util.*;
 import java.util.List;
 
 public class ConvexHulls {
-	// To find orientation of ordered triplet (p, q, r). 
-	// The function returns following values 
-	// 0 --> p, q and r are collinear 
-	// 1 --> Clockwise 
-	// 2 --> Counterclockwise 
+
 	public static int orientation(Point p, Point q, Point r) 
 	{ 
 		int val = (q.y - p.y) * (r.x - q.x) - 
@@ -17,16 +13,16 @@ public class ConvexHulls {
 		if (val == 0) return 0;  // collinear 
 		return (val > 0)? 1: 2; // clock or counterclock wise 
 	} 
-
-	// Prints convex hull of a set of n points. 
-	public static Point[] convexHull(ArrayList <Point> points) 
+	
+	
+	public static ArrayList<Point> convexHull(ArrayList <Point> points) 
 	{ 
 		int n=points.size();
 		// There must be at least 3 points 
 		if (n < 3) return null; 
 
 		// Initialize Result 
-		Vector<Point> hull = new Vector<Point>(); 
+		ArrayList<Point> hull = new ArrayList<Point>(); 
 
 		// Find the leftmost point 
 		int l = 0; 
@@ -68,8 +64,7 @@ public class ConvexHulls {
 
 		} while (p != l);  // While we don't come to first  
 		// point 
-		Point [] edge= new Point[hull.size()];
-		return hull.toArray(edge);
+		return hull;
 	} 
 
 
