@@ -8,7 +8,7 @@ import core.DImage;
 import java.util.Arrays;
 import java.util.Collections;
 
-class ColorReduction implements PixelFilter {
+public class ColorReduction implements PixelFilter {
 
     private int k;
     public ColorReduction(int k){

@@ -3,7 +3,7 @@ package Filters;
 import Interfaces.PixelFilter;
 import core.DImage;
 
-class GuassianBlur implements PixelFilter {
+public class GuassianBlur implements PixelFilter {
 	
 	double [][] gussianBlur={{0.0625,0.125,0.0625},
 			{0.125,0.25,0.125},
